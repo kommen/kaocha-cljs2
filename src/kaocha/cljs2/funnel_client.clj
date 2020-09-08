@@ -97,7 +97,7 @@
             (when-let [clients (:funnel/clients msg)]
               (reduced clients)))))
 
-(defn wait-for-clients [conn]
+(defn wait-for-clients [conn opts]
   (send conn {:funnel/query client-selector
               :funnel/subscribe client-selector})
   (let [clients (listen conn
@@ -106,6 +106,6 @@
                             (reduced clients)
                             (if-let [whoami (:funnel/whoami msg)]
                               (reduced [whoami]))))
-                        {:timeout false})]
+                        opts)]
     (send conn {:funnel/unsubscribe client-selector})
     clients))
